@@ -1,0 +1,25 @@
+ 
+services:
+  backend:
+    build: .
+    container_name: stripe-backend
+    ports:
+      - "4000:3000"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/nhellow_db
+      - STRIPE_SECRET=REPLACE_ME
+      - STRIPE_WEBHOOK_SECRET=REPLACE_ME
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7
+    container_name: stripe_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
