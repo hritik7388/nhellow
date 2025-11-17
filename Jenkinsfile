@@ -1,7 +1,7 @@
 pipeline {
     agent any
     
-  environment {
+    environment {
         IMAGE_NAME = "bookimage:latest"
         GIT_BRANCH = "main"  // ← Tumhari branch ka exact naam
     }
@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Checking out code..."
-               git branch: "${GIT_BRANCH}", url: 'https://github.com/hritik7388/nhellow.git'
+                git branch: "${GIT_BRANCH}", url: 'https://github.com/hritik7388/nhellow.git'
             }
         }
 
@@ -29,14 +29,15 @@ pipeline {
             }
         }
 
-stage('Run Docker Compose') {
-    steps {
-        echo "Restarting containers..."
-        sh 'docker rm -f stripe_mongo || true'  // remove if exists
-        sh 'docker compose down || true'
-        sh 'docker compose up -d --build'
+        stage('Run Docker Compose') {
+            steps {
+                echo "Restarting containers..."
+                sh 'docker rm -f stripe_mongo || true' // remove old container if exists
+                sh 'docker compose down || true'
+                sh 'docker compose up -d --build'
+            }
+        }
     }
-}
 
     post {
         success {
@@ -46,4 +47,4 @@ stage('Run Docker Compose') {
             echo "Pipeline failed ❌"
         }
     }
-}
+}  // <- Ye closing brace bahut important hai
