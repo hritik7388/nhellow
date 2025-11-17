@@ -29,14 +29,14 @@ pipeline {
             }
         }
 
-        stage('Run Docker Compose') {
-            steps {
-                echo "Restarting containers..."
-                sh 'docker compose down || true'
-                sh 'docker compose up -d --build'
-            }
-        }
+stage('Run Docker Compose') {
+    steps {
+        echo "Restarting containers..."
+        sh 'docker rm -f stripe_mongo || true'  // remove if exists
+        sh 'docker compose down || true'
+        sh 'docker compose up -d --build'
     }
+}
 
     post {
         success {
