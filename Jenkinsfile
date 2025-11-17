@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         IMAGE_NAME = "bookimage:latest"
-        GIT_BRANCH = "main"  // ← Tumhari branch ka exact naam
+        GIT_BRANCH = "main"  // Tumhari branch ka exact naam
     }
 
     stages {
@@ -32,8 +32,11 @@ pipeline {
         stage('Run Docker Compose') {
             steps {
                 echo "Restarting containers..."
-                sh 'docker rm -f stripe_mongo || true' // remove old container if exists
+                // Remove existing containers to avoid conflicts
+                sh 'docker rm -f stripe_mongo stripe-backend || true'
+                // Bring down any running compose services
                 sh 'docker compose down || true'
+                // Build and start containers
                 sh 'docker compose up -d --build'
             }
         }
@@ -47,4 +50,4 @@ pipeline {
             echo "Pipeline failed ❌"
         }
     }
-}  // <- Ye closing brace bahut important hai
+}
